@@ -13,7 +13,7 @@ class Main:
         Label(self.root, text="Phone No: ", font="Bell 15").place(x=25, y=55) #Unchangeable
 
         # Phone Number
-        self.phone = Entry(self.root, font="consolas 15", bd=3)
+        self.phone = WatermarkEntry(self.root, font="consolas 15", bd=3, watermark="Enter phone number")
         self.phone.pack()
 
         # SMS details
@@ -54,6 +54,30 @@ class WatermarkText(Text):
 
     def on_focus_out(self, event):
         if not self.get("1.0", "end-1c"):
+            self.put_watermark()
+
+
+class WatermarkEntry(Entry):
+    def __init__(self, master=None, watermark="", **kwargs):
+        super().__init__(master, **kwargs)
+        self.watermark = watermark
+        self.default_fg_color = self["fg"]
+        self.bind("<FocusIn>", self.on_focus_in)
+        self.bind("<FocusOut>", self.on_focus_out)
+        self.put_watermark()
+
+    def put_watermark(self):
+        if not self.get():
+            self.insert(0, self.watermark)
+            self["fg"] = "grey"
+
+    def on_focus_in(self, event):
+        if self.get() == self.watermark:
+            self.delete(0, END)
+            self["fg"] = self.default_fg_color
+
+    def on_focus_out(self, event):
+        if not self.get():
             self.put_watermark()
 
 
