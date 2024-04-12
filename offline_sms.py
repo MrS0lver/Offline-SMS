@@ -1,6 +1,6 @@
 from tkinter import *
 from twilio.rest import Client
-
+import datetime
 class Main:
     def __init__(self, root):
         self.root = root
@@ -34,9 +34,9 @@ class Main:
         self.auth_token = "YOUR_TWILIO_AUTH_TOKEN"
         self.twilio_phone_number = "YOUR_TWILIO_PHONE_NUMBER"
 
+
     def send(self):
-        import random  # Just For testing :)
-        self.detail.config(text=f"SMS sent {random.randint(1, 100)}")
+        x = datetime.datetime.now()
         client = Client(self.account_sid, self.auth_token)
         to_number = self.phone.get()
         message_body = self.msg.get("1.0", "end-1c")
@@ -47,11 +47,11 @@ class Main:
                 from_=self.twilio_phone_number,
                 to=to_number
             )
-            self.detail.config(text="SMS sent successfully!")
+            self.detail.config(text=f"SMS sent to {self.phone} Successfully!! \n Time {x.strftime('%I')}:{x.strftime('%M')}:{x.strftime('%p')}")
         except Exception as e:
-            self.detail.config(text=f"Error: {str(e)}")
+            self.detail.config(text="Try Again !!")
 
-
+################################################################################################################
 
 class WatermarkText(Text):
     def __init__(self, master=None, watermark="", **kwargs):
