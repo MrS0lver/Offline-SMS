@@ -1,4 +1,5 @@
 from tkinter import *
+from twilio.rest import Client
 
 class Main:
     def __init__(self, root):
@@ -28,9 +29,28 @@ class Main:
         self.send = Button(self.root, text="Send", font="Prime 20", bg="lightgrey", command=self.send)
         self.send.pack(fill=BOTH, side=BOTTOM)
 
+         # Twilio credentials
+        self.account_sid = "YOUR_TWILIO_ACCOUNT_SID"
+        self.auth_token = "YOUR_TWILIO_AUTH_TOKEN"
+        self.twilio_phone_number = "YOUR_TWILIO_PHONE_NUMBER"
+
     def send(self):
         import random  # Just For testing :)
         self.detail.config(text=f"SMS sent {random.randint(1, 100)}")
+        client = Client(self.account_sid, self.auth_token)
+        to_number = self.phone.get()
+        message_body = self.msg.get("1.0", "end-1c")
+        
+        try:
+            message = client.messages.create(
+                body=message_body,
+                from_=self.twilio_phone_number,
+                to=to_number
+            )
+            self.detail.config(text="SMS sent successfully!")
+        except Exception as e:
+            self.detail.config(text=f"Error: {str(e)}")
+
 
 
 class WatermarkText(Text):
